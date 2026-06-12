@@ -10,7 +10,7 @@
 #define TFT_RST 4
 #define TFT_LED 21
 // #define PIN_SWITCH 32
-#define PIN_BUZZER 26
+#define PIN_BUZZER 13
 #define PIN_BATTERY 34
 #define PIN_BTN_NEXT 33
 #define PIN_BTN_PREV 25

@@ -21,6 +21,7 @@ typedef struct _objects_t {
     lv_obj_t *pnl_map_2_group;
     lv_obj_t *img_map_2_bg;
     lv_obj_t *dot_thuvien;
+    lv_obj_t *dot_cuachinh;
     lv_obj_t *dot_it;
     lv_obj_t *dot_trienlam;
     lv_obj_t *dot_wc;
@@ -45,6 +46,8 @@ typedef struct _objects_t {
     lv_obj_t *dot_lbl_it;
     lv_obj_t *lbl_thuvien;
     lv_obj_t *dot_lbl_thuvien;
+    lv_obj_t *lbl_cuachinh;
+    lv_obj_t *dot_lbl_cuachinh;
     lv_obj_t *pnl_text_1_group;
     lv_obj_t *lbl_nhavo;
     lv_obj_t *dot_lbl_nhavo;

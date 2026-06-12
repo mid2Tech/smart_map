@@ -11,6 +11,8 @@
     "styles.h",
     "ui.c",
     "ui.h",
+    "ui_font_roboto.c",
+    "ui_font_roboto1.c",
     "ui_image_map_1.c",
     "ui_image_map_2.c",
     "vars.h"
