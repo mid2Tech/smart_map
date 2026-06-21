@@ -5,9 +5,9 @@
 #include <BLEAdvertisedDevice.h>
 
 BLEScan *pBLEScan;
-int rssiThreshold = -105; // Hạ ngưỡng để bắt sóng xa 5-8 mét
+int rssiThreshold = -85;
 int detectedMajor = 0;
-int bestRSSI = -100;
+int bestRSSI = -200;
 unsigned long lastBeaconTime = 0;
 
 String mac_tuyen_sinh = "2a:07:98:03:7b:38";
@@ -24,29 +24,40 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
 
         if (currentRSSI >= rssiThreshold)
         {
-            // Định kỳ reset mức sóng để bắt trạm mới khi di chuyển
-            if (millis() - lastBeaconTime > 5000)
-            {
-                detectedMajor = 0;
-                bestRSSI = -100;
-            }
+            int mac_id = 0;
+            if (currentMAC == mac_tuyen_sinh)
+                mac_id = 1;
+            else if (currentMAC == mac_it)
+                mac_id = 2;
+            else if (currentMAC == mac_thu_vien)
+                mac_id = 3;
+            else if (currentMAC == mac_wc)
+                mac_id = 4;
 
-            if (currentRSSI > bestRSSI)
+            if (mac_id > 0)
             {
-                bestRSSI = currentRSSI;
-                lastBeaconTime = millis();
-                if (currentMAC == mac_tuyen_sinh)
-                    detectedMajor = 1;
-                else if (currentMAC == mac_it)
-                    detectedMajor = 2;
-                else if (currentMAC == mac_thu_vien)
-                    detectedMajor = 3;
-                else if (currentMAC == mac_wc)
-                    detectedMajor = 4;
+                // BÍ QUYẾT ĐỂ NHẬN NHANH: Luôn cập nhật mức sóng nếu là trạm đang đứng,
+                // hoặc nếu gặp trạm mới có sóng mạnh hơn. Không bị "kẹt" số ảo nữa.
+                if (currentRSSI > bestRSSI || mac_id == detectedMajor)
+                {
+                    bestRSSI = currentRSSI;
+                    detectedMajor = mac_id;
+                    lastBeaconTime = millis();
+                }
             }
         }
     }
 };
+
+void scanAndProcessBLE()
+{
+    // Giảm thời gian reset sóng từ 3000ms xuống 1500ms để nhạy hơn khi rời đi
+    if (millis() - lastBeaconTime > 1500)
+    {
+        detectedMajor = 0;
+        bestRSSI = -100;
+    }
+}
 
 void setupBLE()
 {
@@ -65,14 +76,4 @@ void setupBLE()
 
     // Bắt đầu quét ngầm vô thời hạn
     pBLEScan->start(0, nullptr, false);
-}
-
-void scanAndProcessBLE()
-{
-    // Nếu đi ra khỏi vùng phủ sóng quá 3 giây, tàng hình vị trí
-    if (millis() - lastBeaconTime > 3000)
-    {
-        detectedMajor = 0;
-        bestRSSI = -100;
-    }
 }

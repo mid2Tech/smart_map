@@ -1,7 +1,7 @@
 #include "LocationFilter.h"
 
-#define FILTER_SIZE 5
-int location_history[FILTER_SIZE] = {0, 0, 0, 0, 0};
+#define FILTER_SIZE 3 // Giảm từ 5 xuống 3 để nhận diện trạm nhanh hơn
+int location_history[FILTER_SIZE] = {0, 0, 0};
 int history_idx = 0;
 
 int get_filtered_location(int raw_loc)
@@ -28,7 +28,8 @@ int get_filtered_location(int raw_loc)
         }
     }
     static int last_stable = 0;
-    if (max_count >= 2)
+    if (max_count >= 2) // Chỉ cần 2 lần đọc trúng là nhảy số ngay
         last_stable = best_loc;
+
     return last_stable;
 }
